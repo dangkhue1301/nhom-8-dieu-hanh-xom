@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Điều hành xóm · Nhóm 8</title>
+  <meta name="description" content="Game quẹt thẻ Điều hành xóm · Chương 5, tiết 21–22: Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.">
+  <meta name="theme-color" content="#397B78">
+
+  <!-- Open Graph / Zalo / Social Preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="vi_VN">
+  <meta property="og:title" content="Điều hành xóm · Game quẹt thẻ Nhóm 8">
+  <meta property="og:description" content="Vào vai Nhà nước giải quyết 10 chuyện ở xóm lúa ven sông ĐBSCL · Chương 5, tiết 21–22.">
+  <meta property="og:image" content="assets/og-share.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" type="image/png" href="assets/icon-tang-truong.png">
+  <link rel="preload" as="image" href="assets/nen-doc.webp">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="stage-outer">
+    <main class="phone-shell" id="app">
+      <!-- Nền bến ghe 9:16 -->
+      <div class="backdrop-layer" aria-hidden="true"></div>
+
+      <!-- MÀN HÌNH 1: MỞ ĐẦU -->
+      <section id="screen-intro" class="screen screen-intro" aria-labelledby="intro-title">
+        <div class="intro-spacer"></div>
+        <div class="pixel-card intro-card">
+          <div class="badge-row">
+            <span class="pill-badge">Nhóm 8 · Chương 5, tiết 21–22</span>
+          </div>
+          <h1 id="intro-title" class="game-title">Điều hành xóm</h1>
+          <p class="game-subtitle">Xóm lúa ven sông · Đồng bằng sông Cửu Long</p>
+
+          <div class="intro-copy" id="intro-copy">
+            <p>Thị trường giúp hộ dân, hợp tác xã và doanh nghiệp quyết định sản xuất, mua bán thông qua giá cả và nhu cầu.</p>
+            <p class="intro-role">Bạn vào vai Nhà nước, cân nhắc phát triển kinh tế và công bằng xã hội.</p>
+          </div>
+
+          <div class="intro-meta">
+            <span>🃏 10 thẻ tình huống</span>
+            <span>⏱ 3–4 phút</span>
+            <span>👆 Quẹt hoặc bấm chọn</span>
+          </div>
+
+          <div class="intro-actions">
+            <button type="button" id="btn-resume" class="btn btn-primary hidden">Chơi tiếp (1/10)</button>
+            <button type="button" id="btn-start" class="btn btn-primary">Vào xóm</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- MÀN HÌNH 2: CHƠI THẺ & XEM HỆ QUẢ -->
+      <section id="screen-play" class="screen screen-play hidden" aria-label="Bàn điều hành xóm">
+        <!-- Hàng trên: 4 thanh điểm theo lưới 2x2 -->
+        <header class="hud-header">
+          <div class="hud-topbar">
+            <button type="button" id="btn-home" class="mini-btn" aria-label="Về màn mở đầu" title="Về màn mở đầu">
+              ← Mở đầu
+            </button>
+            <div class="progress-wrap" aria-label="Tiến độ ván chơi">
+              <span id="progress-text" class="progress-text">1/10</span>
+              <div id="progress-dots" class="progress-dots" aria-hidden="true"></div>
+            </div>
+            <button type="button" id="btn-restart-top" class="mini-btn" aria-label="Chơi lại từ đầu" title="Chơi lại từ đầu">
+              ↺ Mới
+            </button>
+          </div>
+
+          <div id="metrics-grid" class="metrics-grid" role="region" aria-label="Bốn chỉ số của xóm">
+            <!-- Render bằng JS -->
+          </div>
+        </header>
+
+        <!-- Vùng giữa màn hình: Thẻ tình huống / Phản hồi -->
+        <div class="card-stage">
+          <article id="decision-card" class="pixel-card decision-card" aria-live="polite">
+            <div class="swipe-stamp swipe-stamp-left" id="swipe-stamp-left" aria-hidden="true">
+              <span class="stamp-dir">← Trái</span>
+              <span class="stamp-label" id="stamp-label-left"></span>
+            </div>
+            <div class="swipe-stamp swipe-stamp-right" id="swipe-stamp-right" aria-hidden="true">
+              <span class="stamp-dir">Phải →</span>
+              <span class="stamp-label" id="stamp-label-right"></span>
+            </div>
+
+            <div class="card-head">
+              <span id="card-lesson-tag" class="lesson-pill">Tính tất yếu</span>
+              <span id="card-code-badge" class="code-pill">Thẻ 01</span>
+            </div>
+
+            <div class="speaker-row">
+              <div class="portrait-frame" id="portrait-frame">
+                <img id="speaker-portrait" src="assets/di-sau.png" alt="Chân dung Dì Sáu" width="128" height="128">
+              </div>
+              <div class="speaker-info">
+                <h2 id="speaker-name" class="speaker-name">Dì Sáu</h2>
+                <p id="speaker-role" class="speaker-role">Thương lái & thu mua lúa xóm</p>
+              </div>
+            </div>
+
+            <!-- Trạng thái 1: Chọn phương án -->
+            <div id="phase-card" class="phase-body">
+              <p id="card-situation" class="dialogue-text"></p>
+            </div>
+
+            <!-- Trạng thái 2: Xem hệ quả -->
+            <div id="phase-feedback" class="phase-body hidden">
+              <p id="feedback-situation-echo" class="situation-echo"></p>
+
+              <div class="chosen-banner">
+                <span class="chosen-kicker">Bạn đã chọn</span>
+                <strong id="chosen-label" class="chosen-label"></strong>
+              </div>
+
+              <div id="delta-badges" class="delta-badges" aria-label="Chỉ số vừa thay đổi"></div>
+
+              <p id="feedback-text" class="feedback-text"></p>
+
+              <div class="feedback-lesson-box">
+                <span class="feedback-lesson-label">Ý bài học:</span>
+                <strong id="feedback-lesson-name"></strong>
+                <span id="feedback-characteristic-note" class="char-recorded-badge hidden"></span>
+              </div>
+            </div>
+
+            <!-- Chân thẻ: Hai nút lựa chọn hoặc nút Tiếp -->
+            <div class="card-footer">
+              <div id="choice-buttons" class="choice-buttons">
+                <button type="button" id="btn-choice-left" class="btn-choice btn-choice-left">
+                  <span class="choice-arrow" aria-hidden="true">← Trái</span>
+                  <span class="choice-text" id="btn-left-text"></span>
+                </button>
+                <button type="button" id="btn-choice-right" class="btn-choice btn-choice-right">
+                  <span class="choice-arrow" aria-hidden="true">Phải →</span>
+                  <span class="choice-text" id="btn-right-text"></span>
+                </button>
+              </div>
+
+              <button type="button" id="btn-next" class="btn btn-primary btn-next hidden">Tiếp</button>
+              <button type="button" id="btn-preview-summary" class="btn btn-secondary btn-preview-summary hidden">
+                Mở 5 ô đặc trưng →
+              </button>
+
+              <p id="swipe-hint" class="swipe-hint">Quẹt thẻ trái / phải hoặc bấm nút bên trên</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- MÀN HÌNH 3: TỔNG KẾT -->
+      <section id="screen-summary" class="screen screen-summary hidden" aria-labelledby="summary-title">
+        <div class="pixel-card summary-card">
+          <div class="summary-header">
+            <div class="summary-badge-line">
+              <span id="summary-status-badge" class="pill-badge">Hoàn thành 10/10 thẻ</span>
+              <button type="button" id="btn-present-card7" class="mini-btn" title="Chiếu nhanh Thẻ 07 để chốt bài">
+                Thẻ 07 · Chốt bài
+              </button>
+            </div>
+            <h1 id="summary-title" class="summary-title">Tổng kết điều hành xóm</h1>
+            <p class="summary-note">Bốn chỉ số mô phỏng sau 10 quyết định (không gộp thành điểm thắng chung).</p>
+          </div>
+
+          <div id="summary-metrics-grid" class="metrics-grid summary-metrics">
+            <!-- Render bằng JS -->
+          </div>
+
+          <div class="characteristics-section">
+            <div class="section-heading-row">
+              <h2 class="section-heading">Năm đặc trưng đã mở (5/5)</h2>
+              <span class="section-subhint">Chạm từng ô để xem lựa chọn của bạn</span>
+            </div>
+
+            <div id="characteristics-grid" class="characteristics-grid" role="tablist" aria-label="Năm đặc trưng bài học">
+              <!-- Render bằng JS -->
+            </div>
+
+            <div id="characteristic-detail" class="characteristic-detail" role="tabpanel" tabindex="0" aria-live="polite">
+              <!-- Render chi tiết ô đặc trưng đang chọn -->
+            </div>
+          </div>
+
+          <div class="summary-actions">
+            <button type="button" id="btn-open-review" class="btn btn-secondary">Ôn nhanh</button>
+            <button type="button" id="btn-replay" class="btn btn-primary">Chơi lại</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODAL ÔN NHANH -->
+      <div id="review-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="review-modal-title">
+        <div class="pixel-card modal-card">
+          <div class="modal-header">
+            <div>
+              <span class="pill-badge">Chương 5 · Tiết 21–22</span>
+              <h2 id="review-modal-title" class="modal-title">Ôn nhanh bài học</h2>
+            </div>
+            <button type="button" id="btn-close-review" class="mini-btn" aria-label="Đóng bảng ôn nhanh">✕ Đóng</button>
+          </div>
+
+          <div id="review-modal-body" class="modal-body">
+            <!-- Render bằng JS theo dữ liệu ván chơi -->
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" id="btn-close-review-bottom" class="btn btn-primary">Quay lại tổng kết</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL XÁC NHẬN LÀM MỚI VÁN -->
+      <div id="confirm-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title">
+        <div class="pixel-card modal-card confirm-card">
+          <h2 id="confirm-modal-title" class="modal-title">Bắt đầu ván mới?</h2>
+          <p id="confirm-modal-desc" class="confirm-desc">
+            Tiến độ hiện tại sẽ đặt lại về Thẻ 01 và bốn chỉ số quay về mức khởi điểm 50/100.
+          </p>
+          <div class="confirm-actions">
+            <button type="button" id="btn-cancel-restart" class="btn btn-secondary">Tiếp tục chơi</button>
+            <button type="button" id="btn-confirm-restart" class="btn btn-primary">Chơi mới</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="cards.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
